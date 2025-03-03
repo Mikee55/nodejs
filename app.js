@@ -1,2 +1,3 @@
-console.log(myVariable); // ReferenceError: Cannot access 'myVariable' before initialization
-let myVariable = "Hello";
+const greet = require("./greet");
+
+greet();
