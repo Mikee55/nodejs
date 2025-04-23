@@ -1,4 +1,10 @@
-const greet = require("./greet");
+const Emitter = require("./emitter");
 
-greet.english();
-greet.spanish();
+const emtr = new Emitter();
+
+emtr.on("greet", function () {
+  console.log("Some one is greeting");
+});
+
+console.log("Hello");
+emtr.emit("greet");
