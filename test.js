@@ -1,17 +1,17 @@
-const EventEmitter = require("events");
+// Creating a buffer from a string
+const textBuffer = Buffer.from("Hello, Node.js!", "utf8");
+console.log("Text Buffer:", textBuffer);
+console.log("Text Buffer as String:", textBuffer.toString("utf8"));
+console.log("Text Buffer in Hex:", textBuffer.toString("hex"));
 
-class Emitter extends EventEmitter {
-  constructor() {
-    super();
-    this.on(type, listener);
-    this.emit(type);
-  }
-}
+// Creating a buffer from an array of byte values
+const byteBuffer = Buffer.from([72, 101, 108, 108, 111]); // ASCII for 'Hello'
+console.log("Byte Buffer:", byteBuffer);
+console.log("Byte Buffer as String (ASCII):", byteBuffer.toString("ascii"));
 
-const myEmitter = new Emitter();
-
-myEmitter.on("data", function () {
-  console.log("Hello");
-});
-
-myEmitter.emit("data");
+// Creating an empty buffer of a specific size
+const emptyBuffer = Buffer.alloc(10);
+console.log("Empty Buffer:", emptyBuffer);
+emptyBuffer.write("World", 0, "utf8");
+console.log("Empty Buffer after writing:", emptyBuffer);
+console.log("Empty Buffer as String:", emptyBuffer.toString("utf8"));
