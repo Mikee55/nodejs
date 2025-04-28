@@ -1,17 +1,21 @@
-// Creating a buffer from a string
-const textBuffer = Buffer.from("Hello, Node.js!", "utf8");
-console.log("Text Buffer:", textBuffer);
-console.log("Text Buffer as String:", textBuffer.toString("utf8"));
-console.log("Text Buffer in Hex:", textBuffer.toString("hex"));
+// Creating a Buffer
+const buffer1 = Buffer.alloc(10); // Allocate 10 bytes (filled with zeros)
+console.log("Buffer.alloc(10):", buffer1);
 
-// Creating a buffer from an array of byte values
-const byteBuffer = Buffer.from([72, 101, 108, 108, 111]); // ASCII for 'Hello'
-console.log("Byte Buffer:", byteBuffer);
-console.log("Byte Buffer as String (ASCII):", byteBuffer.toString("ascii"));
+const buffer2 = Buffer.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]); // From a byte array (ASCII for "Hello")
+console.log("Buffer.from([0x48...]):", buffer2);
+console.log("buffer2.toString():", buffer2.toString()); // Convert Buffer to string
 
-// Creating an empty buffer of a specific size
-const emptyBuffer = Buffer.alloc(10);
-console.log("Empty Buffer:", emptyBuffer);
-emptyBuffer.write("World", 0, "utf8");
-console.log("Empty Buffer after writing:", emptyBuffer);
-console.log("Empty Buffer as String:", emptyBuffer.toString("utf8"));
+const buffer3 = Buffer.from("World", "utf8"); // From a string with encoding
+console.log('Buffer.from("World", "utf8"):', buffer3);
+
+// Reading and Writing to a Buffer
+buffer1.write("Hi", 0, "utf8");
+console.log("buffer1 after write:", buffer1);
+console.log("buffer1.readUInt8(0):", buffer1.readUInt8(0)); // Read unsigned 8-bit integer at index 0
+
+// Concatenating Buffers
+const bufferA = Buffer.from("Hello, ");
+const bufferB = Buffer.from("World!");
+const combinedBuffer = Buffer.concat([bufferA, bufferB]);
+console.log("Buffer.concat():", combinedBuffer.toString());
