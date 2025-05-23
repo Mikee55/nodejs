@@ -6,5 +6,5 @@ emtr.on("greet", function () {
   console.log("Some one is greeting");
 });
 
-console.log("Hello");
+console.log("Hallo Alle");
 emtr.emit("greet");
