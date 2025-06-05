@@ -1,10 +1,122 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Simple WebSocket Chat</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+      }
+      #messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        border: 1px solid #ccc;
+        height: 300px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+      }
+      #messages li {
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+      }
+      #messages li:last-child {
+        border-bottom: none;
+      }
+      #messageInput {
+        width: calc(100% - 80px);
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+      #sendButton {
+        width: 70px;
+        padding: 8px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <h1>Halo!</h1>
+    <h1>Public Chat Room</h1>
+
+    <ul id="messages"></ul>
+
+    <input type="text" id="messageInput" placeholder="Type your message..." />
+    <button id="sendButton">Send</button>
+
+    <script>
+      const messagesList = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+
+      // --- Step 1: Establish the WebSocket connection ---
+      // The browser's native WebSocket API is used here.
+      // It initiates the HTTP Upgrade Handshake.
+      const socket = new WebSocket("ws://localhost:8080");
+
+      // --- Event: 'onopen' ---
+      // Fires when the WebSocket connection is successfully established.
+      socket.onopen = (event) => {
+        console.log("Connected to WebSocket server!");
+        appendMessage("<em>Connected to chat!</em>");
+      };
+
+      // --- Event: 'onmessage' ---
+      // Fires when the server sends a message to this client via the WebSocket.
+      socket.onmessage = (event) => {
+        const message = event.data; // The message content sent by the server
+        console.log("Message from server:", message);
+        appendMessage(message);
+      };
+
+      // --- Event: 'onclose' ---
+      // Fires when the WebSocket connection is closed.
+      socket.onclose = (event) => {
+        console.log(
+          "Disconnected from WebSocket server.",
+          event.code,
+          event.reason
+        );
+        appendMessage("<em>Disconnected from chat.</em>");
+      };
+
+      // --- Event: 'onerror' ---
+      // Fires if there's an error with the WebSocket connection.
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        appendMessage("<em>Error connecting to chat.</em>");
+      };
+
+      // Function to send a message to the server
+      function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+          // --- Step 2: Send message to server ---
+          // The 'send' method on the socket object transmits the message.
+          socket.send(message);
+          messageInput.value = ""; // Clear input field
+        }
+      }
+
+      // Event listeners for UI interaction
+      sendButton.addEventListener("click", sendMessage);
+      messageInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      // Helper function to add messages to the display list
+      function appendMessage(message) {
+        const listItem = document.createElement("li");
+        listItem.textContent = message;
+        messagesList.appendChild(listItem);
+        messagesList.scrollTop = messagesList.scrollHeight; // Scroll to bottom
+      }
+    </script>
   </body>
 </html>
